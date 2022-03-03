@@ -16,6 +16,7 @@ from threading import Thread
 import numpy as np
 import torch
 from tqdm import tqdm
+from glob import glob
 
 FILE = Path(__file__).resolve()
 ROOT = FILE.parents[0]  # root directory
@@ -163,6 +164,8 @@ def run(data,
     loss = torch.zeros(3, device=device)
     jdict, stats, ap, ap_class = [], [], [], []
     pbar = tqdm(dataloader, desc=s, ncols=NCOLS, bar_format='{l_bar}{bar:10}{r_bar}{bar:-10b}')  # progress bar
+    
+    #raw_file_count = 0 
     for batch_i, (im, targets, paths, shapes) in enumerate(pbar):
         t1 = time_sync()
         if pt:
@@ -174,6 +177,53 @@ def run(data,
         t2 = time_sync()
         dt[0] += t2 - t1
 
+        '''
+        #raw file creation start
+        if(raw_file_count<100):
+          print("path",paths)
+          img_name = paths[0].split('/')[-1].split('.')[0]
+          print(img_name)
+          total_name = img_name+".raw"
+          print(total_name)
+          print("im", im.size())
+          im_channel_last = im.permute(0, 2, 3, 1)
+          print("im", im_channel_last.size())
+          raw_file_loc='/home/ava/sarala/yolov3/yolov3/raw_files/'
+          print(type(im_channel_last))
+          im_channel_last=im_channel_last.cpu().numpy()
+          im_channel_last=np.float32(im_channel_last)
+          im_channel_last.tofile(raw_file_loc+total_name)
+          print("raw file saved")
+          raw_file_count =raw_file_count+1
+        
+        
+        #raw file creation end
+        '''
+        
+        '''
+        #import & pass raw files start
+        
+        raw_path = "/home/ava/sarala/yolov3/yolov3/raw_files/*.raw"
+        raw_dir = glob(raw_path)
+        #print("path",raw_dir[0])
+        if(raw_file_count<100):
+          img_name = paths[0].split('/')[-1].split('.')[0]
+          #print("---",img_name)
+          total_name = img_name+".raw"
+          #print("total_name",total_name)
+          raw_file_loc='/home/ava/sarala/yolov3/yolov3/raw_files/'
+          filename = raw_file_loc+total_name
+          #print("filename",filename)
+          image = np.fromfile(filename, dtype=np.float32)
+          image_tensor = torch.tensor(image)
+          image_tensor = torch.reshape(image_tensor, (1, 640, 640, 3))
+          image_tensor = image_tensor.permute(0, 3, 1, 2)
+          raw_file_count =raw_file_count+1
+        print("raw file",filename)
+        #import & pass raw files end
+        '''
+        
+        
         # Inference
         out, train_out = model(im) if training else model(im, augment=augment, val=True)  # inference, loss outputs
         dt[1] += time_sync() - t2
