@@ -1,3 +1,4 @@
+
 yolov3 checkpoints file
 "/home/ava/sarala/yolov3/yolov3/weights/yolov3.pt"
 
@@ -26,3 +27,18 @@ requirements file location
 
 pip list file
 "/home/ava/sarala/yolov3/yolov3/pip_list.txt"
+
+======
+raw file creation
+
+python create_coco_100_rawfiles.py
+
+======
+raw file validation
+100 raw files
+python onnx_validation_raw_files.py --weights /home/ava/sarala/yolov3/yolov3/weights/yolov3.onnx
+
+python val_100_images.py --weights /home/ava/sarala/yolov3/yolov3/weights/yolov3.onnx
+
+python val_100_images.py --weights /home/ava/sarala/yolov3/yolov3/weights/yolov3.pt
+
