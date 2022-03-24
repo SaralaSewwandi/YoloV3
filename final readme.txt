@@ -5,6 +5,8 @@ in val.py script coco.yaml is set like below
 parser.add_argument('--data', type=str, default=ROOT / 'data/coco.yaml', help='dataset.yaml path') 
 in coco.yaml , val2017_100.txt  is with sorted asc images set
 val: val2017_100.txt 
+
+you can find the val2017_100.txt  at asc_sorted_100images folder
 python val_100_images.py --weights "/home/ava/sarala/yolov3/yolov3/selva_simplified_onnx/yolov3_simplified_new.onnx"
 
 python val_100_images.py --weights /home/ava/sarala/yolov3/yolov3/weights/yolov3.pt
