@@ -365,6 +365,7 @@ class DetectMultiBackend(nn.Module):
             y = np.concatenate((box, conf.reshape(-1, 1), cls.reshape(-1, 1)), 1)
         elif self.onnx:  # ONNX
             im = im.cpu().numpy()  # torch to numpy
+            
             if self.dnn:  # ONNX OpenCV DNN
                 self.net.setInput(im)
                 y = self.net.forward()

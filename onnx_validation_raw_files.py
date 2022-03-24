@@ -182,10 +182,10 @@ def run(data,
         if(raw_file_count<100):
           print("path",paths)
           img_name = paths[0].split('/')[-1].split('.')[0]
-          print(img_name)
+          #print(img_name)
           total_name = img_name+".raw"
           print(total_name)
-          print("im", im.size())
+          #print("im", im.size())
           im_channel_last = im.permute(0, 2, 3, 1)
           print("im", im_channel_last.size())
           raw_file_loc='/home/ava/sarala/yolov3/yolov3/raw_files/'
@@ -195,27 +195,36 @@ def run(data,
           im_channel_last.tofile(raw_file_loc+total_name)
           print("raw file saved")
           raw_file_count =raw_file_count+1
-        
+        '''
         
         #raw file creation end
-        '''
+        
         
         
         #import & pass raw files start
         
-        raw_path = "/home/ava/sarala/yolov3/yolov3/raw_files/*.raw"
+        #raw_path = "/home/ava/sarala/yolov3/yolov3/raw_files/*.raw"
+        #raw_path ="/home/ava/sarala/yolov3/yolov3/640_640_yolov3_raw/*.raw"
+        raw_path ="/home/ava/sarala/yolov3/yolov3/raw_files/*.raw"
+        #raw_path ="/home/ava/sarala/yolov3/yolov3/testing/"
+        #raw_path ="/home/ava/sarala/yolov3/yolov3/736_1280_yolov3_raw*.raw"
         raw_dir = glob(raw_path)
         #print("path",raw_dir[0])
+        
         if(raw_file_count<100):
           img_name = paths[0].split('/')[-1].split('.')[0]
           #print("---",img_name)
           total_name = img_name+".raw"
           #print("total_name",total_name)
-          raw_file_loc='/home/ava/sarala/yolov3/yolov3/raw_files/'
+          #raw_file_loc='/home/ava/sarala/yolov3/yolov3/raw_files/'
+          #raw_file_loc='/home/ava/sarala/yolov3/yolov3/640_640_yolov3_raw/'
+          raw_file_loc='//home/ava/sarala/yolov3/yolov3/raw_files/'
+          #raw_file_loc="/home/ava/sarala/yolov3/yolov3/testing/"
           filename = raw_file_loc+total_name
           #print("filename",filename)
           image = np.fromfile(filename, dtype=np.float32)
           image_tensor = torch.tensor(image)
+          #print("raw file shape", image_tensor.shape)
           image_tensor = torch.reshape(image_tensor, (1, 640, 640, 3))
           image_tensor = image_tensor.permute(0, 3, 1, 2)
           raw_file_count =raw_file_count+1
@@ -231,7 +240,7 @@ def run(data,
         #out, train_out = model(im) if training else model(im, augment=augment, val=True)  # inference, loss outputs
         
         #raw file inference
-        out, train_out = model(image_tensor) if training else model(im, augment=augment, val=True)  # inference, loss outputs
+        out, train_out = model(image_tensor) if training else model(image_tensor, augment=augment, val=True)  # inference, loss outputs
         
         dt[1] += time_sync() - t2
 

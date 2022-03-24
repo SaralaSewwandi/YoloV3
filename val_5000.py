@@ -165,7 +165,7 @@ def run(data,
     jdict, stats, ap, ap_class = [], [], [], []
     pbar = tqdm(dataloader, desc=s, ncols=NCOLS, bar_format='{l_bar}{bar:10}{r_bar}{bar:-10b}')  # progress bar
     
-    raw_file_count = 0 
+    #raw_file_count = 0 
     for batch_i, (im, targets, paths, shapes) in enumerate(pbar):
         t1 = time_sync()
         if pt:
@@ -177,33 +177,28 @@ def run(data,
         t2 = time_sync()
         dt[0] += t2 - t1
 
-        
+        '''
         #raw file creation start
-        print(im.shape)
         if(raw_file_count<100):
-          #print("path",paths)
+          print("path",paths)
           img_name = paths[0].split('/')[-1].split('.')[0]
-          #print(img_name)
+          print(img_name)
           total_name = img_name+".raw"
-          #print(total_name)
-          #print("im", im.size())
+          print(total_name)
+          print("im", im.size())
           im_channel_last = im.permute(0, 2, 3, 1)
           print("im", im_channel_last.size())
-          #raw_file_loc='/home/ava/sarala/yolov3/yolov3/2176_3840_yolov3_raw/'
-          #raw_file_loc="/home/ava/sarala/yolov3/yolov3/native_raw_files/"
-          raw_file_loc="/home/ava/sarala/yolov3/yolov3/raw_files/"
-          #raw_file_loc="/home/ava/sarala/yolov3/yolov3/640_640_yolov3_raw/"
-          print(im_channel_last.shape)
+          raw_file_loc='/home/ava/sarala/yolov3/yolov3/raw_files/'
+          print(type(im_channel_last))
           im_channel_last=im_channel_last.cpu().numpy()
           im_channel_last=np.float32(im_channel_last)
           im_channel_last.tofile(raw_file_loc+total_name)
-          print(raw_file_loc+total_name)
+          print("raw file saved")
           raw_file_count =raw_file_count+1
-        else:
-          exit()
+        
         
         #raw file creation end
-        
+        '''
         
         '''
         #import & pass raw files start
@@ -358,9 +353,9 @@ def run(data,
 
 def parse_opt():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--data', type=str, default=ROOT / 'data/coco.yaml', help='dataset.yaml path')
+    parser.add_argument('--data', type=str, default=ROOT / 'data/coco_5000_val.yaml', help='dataset.yaml path')
     parser.add_argument('--weights', nargs='+', type=str, default=ROOT / 'yolov3.pt', help='model.pt path(s)')
-    parser.add_argument('--batch-size', type=int, default=1, help='batch size')
+    parser.add_argument('--batch-size', type=int, default=32, help='batch size')
     parser.add_argument('--imgsz', '--img', '--img-size', type=int, default=640, help='inference size (pixels)')
     parser.add_argument('--conf-thres', type=float, default=0.001, help='confidence threshold')
     parser.add_argument('--iou-thres', type=float, default=0.6, help='NMS IoU threshold')
@@ -387,7 +382,7 @@ def parse_opt():
 
 
 def main(opt):
-    #check_requirements(requirements=ROOT / 'requirements.txt', exclude=('tensorboard', 'thop'))
+    check_requirements(requirements=ROOT / 'requirements.txt', exclude=('tensorboard', 'thop'))
 
     if opt.task in ('train', 'val', 'test'):  # run normally
         if opt.conf_thres > 0.001:  # https://github.com/ultralytics/yolov5/issues/1466
